@@ -1,0 +1,4 @@
+---
+# vars file for setup-apache-role
+rh_pkg: "httpd"
+db_pkg: "appache2"

@@ -1,0 +1,6 @@
+---
+- name: This playbook in stall httpd
+  hosts: all
+  become: true
+  roles:
+    - setup-apache-role

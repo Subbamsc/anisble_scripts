@@ -1,0 +1,42 @@
+---
+- name: setup tomcat
+  hosts: all
+  become: true
+  vars:
+    version: 11
+
+  tasks:
+  
+  - name: Install java on RedHat
+    yum:
+      name: java
+      state: installed
+    when: ansible_os_family == "RedHat"
+
+  - name: Install java on Debian
+    apt:
+      name: default-jdk
+      state: present
+    when: ansible_os_family == "Debian"
+
+  - name: Download Tomcat version {{version}}
+    get_url:
+      url: https://dlcdn.apache.org/tomcat/tomcat-{{version}}/v{{version}}.0.11/bin/apache-tomcat-{{version}}.0.11.tar.gz
+      dest: /opt
+
+  - name: Extract Tomcat
+    unarchive:
+      src: /opt/apache-tomcat-{{version}}.0.11.tar.gz
+      dest: /opt
+      remote_src: yes
+
+  - name: Executable Permissions
+    file:
+      path: /opt/apache-tomcat-{{version}}.0.11/bin/startup.sh
+      mode: 0777
+
+  - name: Run .sh file
+    shell: nohup ./startup.sh
+    args:
+      chdir: /opt/apache-tomcat-{{version}}.0.11/bin
+
